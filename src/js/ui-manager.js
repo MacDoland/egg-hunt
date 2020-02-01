@@ -25,7 +25,7 @@ class UI {
 
         sceneRotationControl.oninput = function () {
             sceneManager.rotateTo(this.value);
-            sceneManager.render();
+            window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
         }
 
         scenePanControl.oninput = function () {
@@ -35,7 +35,7 @@ class UI {
             }
 
             sceneManager.pan(value / 100);
-            sceneManager.render();
+            window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
         }
 
         this.gameElement.addEventListener('mousedown', (e) => {
@@ -67,7 +67,7 @@ class UI {
 
                 sceneManager.rotateTo(degrees);
                 sceneManager.pan(height / 100);
-                sceneManager.render();
+                window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
             }
         });
 
@@ -76,7 +76,7 @@ class UI {
             zoom -= (e.deltaY /1000) * zoomSpeed;
             zoom = THREE.Math.clamp(zoom, 1, 3);
             sceneManager.zoom(zoom);
-            sceneManager.render();
+            window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
         });
 
 

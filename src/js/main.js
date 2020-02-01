@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var selectedMusic = music[Utility.getRandomInt(music.length)];
 
+  
+
     gameManager.onBegin(function () {
         sceneManager.init();
     });
@@ -66,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var volume = 0.25;
 
-        document.body.querySelector('#volume-toggle').addEventListener('click', () =>{
+        document.body.querySelector('#volume-toggle').addEventListener('click', () => {
             volume = volume != 0.25 ? 0.25 : 0;
             audioService.setVolume(volume);
         });
@@ -105,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
             pickHelper.pick(ui.getPickPosition(), eggModels, sceneManager.getCamera());
 
             if (pickHelper.pickedObject) {
-                sceneManager.render();
+                window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
             }
 
             requestAnimationFrame(loop);
@@ -148,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (window.outerWidth < 768) {
             sceneManager.updateRenderScale();
         }
-        sceneManager.render();
+        window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
     });
 
     gameManager.onGameEnd((score) => {

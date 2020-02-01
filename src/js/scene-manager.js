@@ -23,6 +23,10 @@ class SceneManager {
 
 
         this.rotation = 0;
+
+        this.stats = new Stats();
+        this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.body.appendChild(this.stats.dom);
     }
 
     init() {
@@ -233,7 +237,9 @@ class SceneManager {
     }
 
     render() {
+        // this.stats.begin();
         this.renderer.render(this.scene, this.camera);
+        // this.stats.end();
     }
 
     /* Events */
