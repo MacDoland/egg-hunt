@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Egg hunt!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+</head>
+
+<body>
+    <script src="vendor/doT.min.js"></script>
+    <script src="vendor/three.min.js"></script>
+    <script src="vendor/GLTFLoader.min.js"></script>
+    <script src="./dist/main.js"></script>
+
+    <div id="egg-hunt-game" class="egg-hunt">
+        <div class="game-bar">
+            <div id="game-counter"></div>
+            <div id="game-timer"></div>
+        </div>
+        <div class="inner">
+            <div class="horizontal">
+                <div id="intro-screen" class="intro-screen">
+                    <button> Begin </button>
+                </div>
+                <div id="loading-screen" class="loading-screen">
+                    <p> Loading </p>
+                </div>
+                <div id="score-screen" class="score-screen">
+                    <div id="game-score"></div>
+                    <!-- <button> Again ? </button> -->
+                </div>
+                <div class="game-container">
+
+                </div>
+                <div class="slidecontainer">
+                    <input type="range" min="-1" max="360" value="180" class="slider" id="scene-rotation-control">
+                </div>
+
+            </div>
+            <div class="vertical">
+                <div class="slidecontainer vertical">
+                    <input type="range" min="-1500" max="400" value="-200" orient="vertical" class="slider vertical"
+                        id="scene-pan-control">
+                </div>
+            </div>
+        </div>
+        <button id="volume-toggle">Toggle audio</button>
+
+    </div >
+</body>
+
+</html>

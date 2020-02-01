@@ -1,0 +1,23 @@
+.c-game-counter {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-items: center;
+  justify-content: center;
+  @media (max-width: 767px) { 
+    padding: 0 20px;
+  }
+
+
+  &__image {
+    width: 75px;
+
+    @media (max-width: 767px) { 
+      width: 50px;
+    }
+
+    &.found {
+        opacity: .25;
+    }
+  }
+}

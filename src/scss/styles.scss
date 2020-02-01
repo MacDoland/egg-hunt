@@ -1,0 +1,16 @@
+@import "egg-hunt";
+@import "slider";
+
+@import "./components/game-counter.component.scss";
+@import "./components/ui-timer.component.scss";
+@import "./components/ui-score.component.scss";
+
+body {
+    background: #ba9c6d;
+    color: #fff;
+    font-size: 32px;
+
+    @media (max-width: 767px) { 
+        font-size: 22px;
+      }
+}
