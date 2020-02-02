@@ -108,8 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let textureUrls = [
             './media/sky/01A_Day_Sunless_Left.png',
             './media/sky/01A_Day_Sunless_Right.png',
-            './media/sky/01A_Day_Sunless_Up.png',
             './media/sky/01A_Day_Sunless_Down.png',
+            './media/sky/01A_Day_Sunless_Up.png',
             './media/sky/01A_Day_Sunless_Front.png',
             './media/sky/01A_Day_Sunless_Back.png'
         ];
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             });
 
-            var skyBoxGeometry = new CubeGeometry(5000, 5000, 5000);
+            var skyBoxGeometry = new CubeGeometry(1500, 1500, 1500);
             var skyBoxMaterial = new MeshFaceMaterial(materials);
             var mesh = new Mesh(skyBoxGeometry, skyBoxMaterial);
             mesh.scale.y = -1;

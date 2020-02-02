@@ -62,14 +62,14 @@ class SceneManager {
             element.append(this.renderer.domElement);
         }
 
-        this.camera = new PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 0.01, 10000);
-        this.camera.position.set(0, 1.5, 14.5)
+        this.camera = new PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 2000);
+        this.camera.position.set(0, 3.5, 14.5)
         this.camera.zoom = 1;
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.updateProjectionMatrix();
 
 
-        this.postProcessingManager = new PostProcessingManager(this.scene, this.renderer, this.camera);
+        this.postProcessingManager = new PostProcessingManager(this.scene, this.renderer, this.camera, this);
         this.postProcessingManager.init();
 
 
@@ -114,6 +114,10 @@ class SceneManager {
 
     getRenderer() {
         return this.renderer;
+    }
+
+    getRoot() {
+        return this.root;
     }
 
     add(item) {
