@@ -117,6 +117,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         skyboxLoader.onLoadTextures((textures) => {
             var materials = textures.map((texture) =>{
+
+                texture.wrapS = THREE.RepeatWrapping;//stops unwanted stretching
+                texture.wrapT = THREE.RepeatWrapping;//stops unwanted stretching
+                texture.repeat.y = -1; //flip texture vertically;
+                texture.encoding = THREE.sRGBEncoding;
+                texture.flipY = true;
+                texture.needsUpdate = true;
+
                 return new THREE.MeshBasicMaterial({
                     map: texture,
                     side: THREE.BackSide
