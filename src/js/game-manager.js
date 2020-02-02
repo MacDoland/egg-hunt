@@ -10,6 +10,9 @@ import Timer from './timer';
 import UI from './ui-manager';
 import Utility from './utility';
 
+import {Math} from "three";
+
+
 
 class GameManager {
 
@@ -87,7 +90,7 @@ class GameManager {
         var score = 0;
         var eggsFound = this.getPickedEggCount();
         var timerState = this.timer.getState();
-        var timeLeft = THREE.Math.clamp(timerState.duration - timerState.elapsedTime, 0, timerState.duration);
+        var timeLeft = Math.clamp(timerState.duration - timerState.elapsedTime, 0, timerState.duration);
 
         if(timeLeft > 0) {
             timeLeft = Math.floor(timeLeft / 60);

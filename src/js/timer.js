@@ -1,5 +1,6 @@
 import EventDispatcher from './event-dispatcher';
 
+
 class Timer {
     constructor() {
         this.eventDispatcher = new EventDispatcher();

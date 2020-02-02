@@ -93,7 +93,6 @@ THREE.BokehPass.prototype = Object.assign( Object.create( THREE.Pass.prototype )
 		renderer.render( this.scene, this.camera );
 
 		// Render bokeh composite
-
 		this.uniforms[ "tColor" ].value = readBuffer.texture;
 		this.uniforms[ "nearClip" ].value = this.camera.near;
 		this.uniforms[ "farClip" ].value = this.camera.far;

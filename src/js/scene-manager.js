@@ -1,3 +1,7 @@
+import {PerspectiveCamera, Scene, WebGLRenderer, Vector3, Math, MeshBasicMaterial, DoubleSide, PCFShadowMap, sRGBEncoding } from "three";
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+
+
 import EventDispatcher from './event-dispatcher';
 import Utility from './utility';
 
@@ -7,7 +11,8 @@ class SceneManager {
         this.events = {
             afterInit: 'event-after-init',
             onModelsLoaded: 'event-on-models-loaded',
-            onUpdatedSceneMaterials: 'event-on-updated-scene-materials'
+            onUpdatedSceneMaterials: 'event-on-updated-scene-materials',
+            onRender: 'event-on-render'
         };
         var aspect = 1;
         var depth = 0.45;
@@ -16,11 +21,11 @@ class SceneManager {
 
         this.container = document.body.querySelector('#egg-hunt-game .game-container')
 
-        this.scene = new THREE.Scene({
+        this.scene = new Scene({
             // background: texture
         });
 
-        this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        this.renderer = new WebGLRenderer({ alpha: true, antialias: true });
         // this.renderer.setClearColor(0x87CEEB, 1);
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -46,19 +51,19 @@ class SceneManager {
 
         this.renderer.shadowMapEnabled = true;
         this.renderer.shadowMapSoft = true;
-        this.renderer.shadowMapType = THREE.PCFShadowMap;
+        this.renderer.shadowMapType = PCFShadowMap;
         this.renderer.gammaFactor = 2.2;
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.outputEncoding = sRGBEncoding;
 
         var element = document.body.querySelector('#egg-hunt-game .game-container');
         if (element) {
             element.append(this.renderer.domElement);
         }
 
-        this.camera = new THREE.PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 10000);
+        this.camera = new PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 0.01, 10000);
         this.camera.position.set(0, 1.5, 14.5)
         this.camera.zoom = 1;
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+        this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.updateProjectionMatrix();
 
         // var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
@@ -95,7 +100,7 @@ class SceneManager {
 
     loadModels() {
         var that = this;
-        var gLTFloader = new THREE.GLTFLoader();
+        var gLTFloader = new GLTFLoader();
 
         gLTFloader.load('../egg-hunt.gltf', function (gltf) {
             that.eventDispatcher.dispatch(that.events.onModelsLoaded, gltf);
@@ -118,6 +123,10 @@ class SceneManager {
         return this.scene;
     }
 
+    getRenderer() {
+        return this.renderer;
+    }
+
     add(item) {
         this.scene.add(item);
     }
@@ -133,21 +142,21 @@ class SceneManager {
 
     rotateTo(degrees) {
         if (this.root) {
-            this.root.rotation.y = THREE.Math.degToRad(degrees);
+            this.root.rotation.y = Math.degToRad(degrees);
         }
 
         if(this.skyBox) {
-            this.skyBox.rotation.y = THREE.Math.degToRad(degrees);
+            this.skyBox.rotation.y = Math.degToRad(degrees);
         }
     }
 
     rotateBy(degrees) {
         if (this.root) {
-            this.root.rotation.y += THREE.Math.degToRad(degrees);
+            this.root.rotation.y += Math.degToRad(degrees);
         }
 
         if(this.skyBox) {
-            this.skyBox.rotation.y += THREE.Math.degToRad(degrees);
+            this.skyBox.rotation.y += Math.degToRad(degrees);
         }
     }
 
@@ -244,10 +253,10 @@ class SceneManager {
                     return;
                 }
 
-                model.material = new THREE.MeshBasicMaterial({
+                model.material = new MeshBasicMaterial({
                     lightMap: lightMapTexture,
                     lightMapIntensity: 2,
-                    side: THREE.DoubleSide
+                    side: DoubleSide
                 });
                 model.material.needsUpdate = true;
             }
@@ -257,7 +266,7 @@ class SceneManager {
             if (egg) {
                 egg.model.material.map = egg.texture;
                 egg.model.material.needsUpdate = true;
-                egg.model.rotation.z = THREE.Math.degToRad(Utility.getRandomInt(360));
+                egg.model.rotation.z = Math.degToRad(Utility.getRandomInt(360));
             }
         })
 
@@ -265,10 +274,10 @@ class SceneManager {
 
         groundModels.forEach((model) => {
             if (model && model.material) {
-                model.material = new THREE.MeshBasicMaterial({
+                model.material = new MeshBasicMaterial({
                     lightMap: lightMapFloorTexture,
                     lightMapIntensity: 2,
-                    side: THREE.DoubleSide
+                    side: DoubleSide
                 });
                 model.material.needsUpdate = true;
             }
@@ -278,10 +287,10 @@ class SceneManager {
 
         foliageModels.forEach((model) => {
             if (model && model.material) {
-                model.material = new THREE.MeshBasicMaterial({
+                model.material = new MeshBasicMaterial({
                     lightMap: lightMapFoliageTexture,
                     lightMapIntensity: 2,
-                    side: THREE.DoubleSide
+                    side: DoubleSide
                 });
                 model.material.needsUpdate = true;
             }
@@ -294,7 +303,9 @@ class SceneManager {
 
     render() {
         // this.stats.begin();
-        this.renderer.render(this.scene, this.camera);
+         this.renderer.render(this.scene, this.camera);
+
+      //  this.eventDispatcher.dispatch(this.events.onRender);
         // this.stats.end();
     }
 
@@ -309,6 +320,10 @@ class SceneManager {
 
     onUpdatedSceneMaterials(handler) {
         this.eventDispatcher.registerHandler(this.events.onUpdatedSceneMaterials, handler);
+    }
+
+    onRender(handler) {
+        this.eventDispatcher.registerHandler(this.events.onRender, handler);
     }
 
 }

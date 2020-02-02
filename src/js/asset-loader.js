@@ -1,9 +1,11 @@
 import  EventDispatcher from './event-dispatcher';
+import {TextureLoader, RepeatWrapping, sRGBEncoding } from "three";
+
 
 class AssetLoader {
 
     constructor() {
-        this.loader = new THREE.TextureLoader();
+        this.loader = new TextureLoader();
         this.eventDispatcher = new EventDispatcher();
         this.events = {
             onLoadTextures: 'event-load-textures',
@@ -14,11 +16,11 @@ class AssetLoader {
         return new Promise((resolve, reject) => {
             try {
                 var texture = this.loader.load(url);
-                texture.wrapS = THREE.RepeatWrapping;//stops unwanted stretching
-                texture.wrapT = THREE.RepeatWrapping;//stops unwanted stretching
+                texture.wrapS = RepeatWrapping;//stops unwanted stretching
+                texture.wrapT = RepeatWrapping;//stops unwanted stretching
                 texture.repeat.y = - 1; //flip texture vertically;
                 texture.needsUpdate = true;
-                texture.encoding = THREE.sRGBEncoding;
+                texture.encoding = sRGBEncoding;
 
                 resolve(texture);
             }

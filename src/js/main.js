@@ -1,9 +1,13 @@
+
+import { AudioListener, Math, RepeatWrapping, sRGBEncoding, BackSide, MeshBasicMaterial, MeshFaceMaterial, CubeGeometry, Mesh  } from "three";
+
 import ApiService from './api-service';
 import AssetLoader from './asset-loader';
 import AudioService from './audio-service';
 import GameCounter from './components/game-counter.component';
 import SceneManager from './scene-manager';
 import EggService from './egg-service';
+import PostProcessingManager from './post-processing-manager';
 import PickHelper from './pick-helper';
 import UI from './ui-manager';
 import Utility from './utility';
@@ -25,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         , eggService = new EggService(20)
         , pickHelper = new PickHelper()
         , ui = new UI();
+
 
 
     let eggsData
@@ -49,17 +54,21 @@ document.addEventListener("DOMContentLoaded", function () {
     var selectedMusic = music[Utility.getRandomInt(music.length)];
 
 
-
     gameManager.onBegin(function () {
         sceneManager.init();
     });
 
 
     sceneManager.onAfterInit(() => {
+        let postProcessingManager = new PostProcessingManager(sceneManager);
+        postProcessingManager.init();
+        sceneManager.onRender(postProcessingManager.render.bind(postProcessingManager));
+
+
         apiService.getAllEggs();
 
-        var listener = new THREE.AudioListener();
-        var sfxListener = new THREE.AudioListener();
+        var listener = new AudioListener();
+        var sfxListener = new AudioListener();
         sceneManager.getCamera().add(listener);
         sceneManager.getCamera().add(sfxListener);
         audioService = new AudioService(listener);
@@ -92,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sceneManager.onModelsLoaded((loadedModel) => {
         model = loadedModel;
         root = loadedModel.scene;
-        root.rotation.y = THREE.Math.degToRad(180);
+        root.rotation.y = Math.degToRad(180);
         sceneManager.setRoot(root);
         sceneManager.add(loadedModel.scene);
         var models = sceneManager.getModelsByName("Egg", loadedModel.scene);
@@ -100,10 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     sceneManager.onModelsLoaded(() => {
-        
-        let loader = new THREE.CubeTextureLoader();
-
-
+        // audioService.disable.bind(audioService)();
+    
         let textureUrls = [
             './media/sky/01A_Day_Sunless_Left.png',
             './media/sky/01A_Day_Sunless_Right.png',
@@ -118,22 +125,22 @@ document.addEventListener("DOMContentLoaded", function () {
         skyboxLoader.onLoadTextures((textures) => {
             var materials = textures.map((texture) =>{
 
-                texture.wrapS = THREE.RepeatWrapping;//stops unwanted stretching
-                texture.wrapT = THREE.RepeatWrapping;//stops unwanted stretching
+                texture.wrapS = RepeatWrapping;//stops unwanted stretching
+                texture.wrapT = RepeatWrapping;//stops unwanted stretching
                 texture.repeat.y = -1; //flip texture vertically;
-                texture.encoding = THREE.sRGBEncoding;
+                texture.encoding = sRGBEncoding;
                 texture.flipY = true;
                 texture.needsUpdate = true;
 
-                return new THREE.MeshBasicMaterial({
+                return new MeshBasicMaterial({
                     map: texture,
-                    side: THREE.BackSide
+                    side: BackSide
                 })
             });
 
-            var skyBoxGeometry = new THREE.CubeGeometry(5000, 5000, 5000);
-            var skyBoxMaterial = new THREE.MeshFaceMaterial(materials);
-            var mesh = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+            var skyBoxGeometry = new CubeGeometry(5000, 5000, 5000);
+            var skyBoxMaterial = new MeshFaceMaterial(materials);
+            var mesh = new Mesh(skyBoxGeometry, skyBoxMaterial);
             mesh.scale.y = -1;
             sceneManager.addSky(mesh)
         });
@@ -154,6 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //     }).bind(this));
 
     });
+
 
     eggService.onHatchedEggs((eggs) => {
         loadedEggs = eggs;

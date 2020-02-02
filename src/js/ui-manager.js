@@ -1,3 +1,5 @@
+import { Math } from "three";
+
 class UI {
 
     constructor(canvas) {
@@ -75,7 +77,7 @@ class UI {
 
 
         let panHorizontal = (degrees, delta) => {
-            degrees +=  delta;
+            degrees += delta;
 
             if (degrees > 359) {
                 degrees = 0;
@@ -90,14 +92,13 @@ class UI {
 
         let panVertical = (height, delta, min, max) => {
             height -= delta;
-            height = THREE.Math.clamp(height, parseFloat(min), parseFloat(max));
+            height = Math.clamp(height, parseFloat(min), parseFloat(max));
             return height
         }
 
-
         let pan = (ev) => {
-            deltaRotation =  ev.deltaX - lastDeltaRotation;
-            deltaPan =  ev.deltaY - lastDeltaPan;
+            deltaRotation = ev.deltaX - lastDeltaRotation;
+            deltaPan = ev.deltaY - lastDeltaPan;
             degrees = panHorizontal(degrees, deltaRotation * rotationSpeed);
             height = panVertical(height, deltaPan * panSpeed, minHeight, maxHeight);
             sceneManager.rotateTo(degrees);
@@ -105,7 +106,7 @@ class UI {
             window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
 
             lastDeltaRotation = ev.deltaX;
-            lastDeltaPan = ev.deltaY; 
+            lastDeltaPan = ev.deltaY;
         }
 
         hammertime.on('panstart', function (ev) {
@@ -123,14 +124,14 @@ class UI {
         this.gameElement.addEventListener("wheel", e => {
             e.preventDefault();
             zoom -= (e.deltaY / 1000) * zoomSpeed;
-            zoom = THREE.Math.clamp(zoom, 1, 3);
+            zoom = Math.clamp(zoom, 1, 3);
             sceneManager.zoom(zoom);
             window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
         });
 
         hammertime.on('pinch', function (ev) {
             zoom += (ev.scale - 1) * 0.5;
-            zoom = THREE.Math.clamp(zoom, 1, 3);
+            zoom = Math.clamp(zoom, 1, 3);
             sceneManager.zoom(zoom);
             window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
         });

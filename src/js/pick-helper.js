@@ -1,13 +1,15 @@
 import EventDispatcher from './event-dispatcher';
+import {Vector2, Raycaster } from "three";
+
 
 class PickHelper {
     constructor() {
         this.eventDispatcher = new EventDispatcher();
-        this.raycaster = new THREE.Raycaster();
+        this.raycaster = new Raycaster();
         this.pickedObject = null;
         this.pickedObjectSavedColor = 0;
-        this.offset = new THREE.Vector2(0, 0);
-        this.zero = new THREE.Vector2(0, 0);
+        this.offset = new Vector2(0, 0);
+        this.zero = new Vector2(0, 0);
         this.events = {
             onPick: "events-on-pick"
         };
@@ -42,7 +44,7 @@ class PickHelper {
         }
         else {
             if (this.pickedObject) {
-                this.pickedObject.material.map.offset = new THREE.Vector2();
+                this.pickedObject.material.map.offset = new Vector2();
                 this.pickedObject.material.needsUpdate = true;
                 this.pickedObject = undefined;
             }
