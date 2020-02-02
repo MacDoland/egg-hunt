@@ -8,18 +8,18 @@ class UIScore {
             score: 0
         };
 
-        this.template = doT.template(`
-            <div class="c-ui-score">
-                <p>Score: {{=this.model.score}}</p>
-            </div>
-        `);
+        // this.template = doT.template(`
+        //     <div class="c-ui-score">
+        //         <p>Score: {{=this.model.score}}</p>
+        //     </div>
+        // `);
 
-        this.element.innerHTML = this.template();
+        // this.element.innerHTML = this.template();
     }
 
     update(model) {
         this.model = model;
-        this.element.innerHTML = this.template(model);
+        // this.element.innerHTML = this.template(model);
     }
  
 }

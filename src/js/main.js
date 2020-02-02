@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         audioService.setVolume(0.25);
 
         let volumeControl = document.body.querySelector('#volume-toggle');
-        
+
         if (volumeControl) {
             var volume = 0.25;
 
@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
         root.rotation.y = THREE.Math.degToRad(180);
         sceneManager.setRoot(root);
         sceneManager.add(loadedModel.scene);
-
         var models = sceneManager.getModelsByName("Egg", loadedModel.scene);
         eggService.buildEggs(eggsData, models);
     });

@@ -16,9 +16,18 @@ class SceneManager {
 
         this.container = document.body.querySelector('#egg-hunt-game .game-container')
 
-        this.scene = new THREE.Scene();
-        this.renderer = new THREE.WebGLRenderer(/*{ alpha: true }*/{ antialias: true });
-        this.renderer.setClearColor(0x87CEEB, 1);
+
+
+
+
+
+
+        this.scene = new THREE.Scene({
+            // background: texture
+        });
+
+        this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        // this.renderer.setClearColor(0x87CEEB, 1);
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
         this.rotation = 0;
@@ -52,12 +61,32 @@ class SceneManager {
             element.append(this.renderer.domElement);
         }
 
-        this.camera = new THREE.PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 3000);
+        this.camera = new THREE.PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 30000);
         this.camera.position.set(0, 1.5, 14.5)
         this.camera.zoom = 1;
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         this.camera.updateProjectionMatrix();
-        this.eventDispatcher.dispatch(this.events.afterInit);
+
+        // var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        // this.scene.add( directionalLight );
+
+
+        let loader = new THREE.CubeTextureLoader();
+        let texture = loader.load([
+            './media/sky/01A_Day_Sunless_Left.png',
+            './media/sky/01A_Day_Sunless_Right.png',
+            './media/sky/01A_Day_Sunless_Up.png',
+            './media/sky/01A_Day_Sunless_Down.png',
+            './media/sky/01A_Day_Sunless_Front.png',
+            './media/sky/01A_Day_Sunless_Back.png'
+        ],
+        function(cubeTexture){
+            this.setBackground(cubeTexture);
+            this.eventDispatcher.dispatch(this.events.afterInit);
+        }.bind(this));
+
+
+       
     }
 
     updateRenderScale() {
@@ -167,6 +196,11 @@ class SceneManager {
         }
 
         return models;
+    }
+
+    setBackground(texture) {
+        this.scene.background = texture;
+        this.scene.needsUpdate = true;
     }
 
     getAllModels(node) {

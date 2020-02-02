@@ -18,3 +18,26 @@ body {
         font-size: 22px;
       }
 }
+
+
+.debugger {
+  color:black;
+  padding: 10px;
+  position: relative;
+  // left: 10px;
+  // top: 10px;
+  width: 200px;
+
+  &:after {
+    background: #000;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    opacity: 0.7;
+    transform: translateZ(1000000px);
+    z-index: 10000;
+  }
+
+}
