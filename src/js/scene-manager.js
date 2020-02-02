@@ -52,7 +52,7 @@ class SceneManager {
         this.renderer.shadowMapEnabled = true;
         this.renderer.shadowMapSoft = true;
         this.renderer.shadowMapType = PCFShadowMap;
-        this.renderer.gammaFactor = 2.2;
+        // this.renderer.gammaFactor = 2.2;
         this.renderer.outputEncoding = sRGBEncoding;
 
         var element = document.body.querySelector('#egg-hunt-game .game-container');
@@ -303,9 +303,9 @@ class SceneManager {
 
     render() {
         // this.stats.begin();
-         this.renderer.render(this.scene, this.camera);
+        // this.renderer.render(this.scene, this.camera);
 
-      //  this.eventDispatcher.dispatch(this.events.onRender);
+        this.eventDispatcher.dispatch(this.events.onRender);
         // this.stats.end();
     }
 
