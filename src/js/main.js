@@ -17,10 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
         , apiService = new ApiService()
         , gameManager = new GameManager(element)
         , sceneManager = new SceneManager()
-        , gameCounterElement = document.body.querySelector('#game-counter')
-        , gameCounter = new GameCounter(gameCounterElement)
+        // , gameCounterElement = document.body.querySelector('#game-counter')
+        // , gameCounter = new GameCounter(gameCounterElement)
         , uIScore = new UIScore(document.body.querySelector('#game-score'))
-        , uITimer = new UITimer(document.body.querySelector('#game-timer'))
+        // , uITimer = new UITimer(document.body.querySelector('#game-timer'))
         , assetLoader = new AssetLoader()
         , eggService = new EggService(20)
         , pickHelper = new PickHelper()
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var selectedMusic = music[Utility.getRandomInt(music.length)];
 
-  
+
 
     gameManager.onBegin(function () {
         sceneManager.init();
@@ -66,12 +66,16 @@ document.addEventListener("DOMContentLoaded", function () {
         audioService.load(selectedMusic.key, selectedMusic.path);
         audioService.setVolume(0.25);
 
-        var volume = 0.25;
+        let volumeControl = document.body.querySelector('#volume-toggle');
+        
+        if (volumeControl) {
+            var volume = 0.25;
 
-        document.body.querySelector('#volume-toggle').addEventListener('click', () => {
-            volume = volume != 0.25 ? 0.25 : 0;
-            audioService.setVolume(volume);
-        });
+            document.body.querySelector('#volume-toggle').addEventListener('click', () => {
+                volume = volume != 0.25 ? 0.25 : 0;
+                audioService.setVolume(volume);
+            });
+        }
 
         sfxService = new AudioService(sfxListener);
         sfxService.load('success', 'audio/success-chime.wav');
@@ -101,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
         eggModels = eggs.map((egg) => egg.model);
         pickedEggs = eggService.pickEggs(eggs, 4);
         gameManager.setPickedEggs(pickedEggs);
-        gameCounter.update(pickedEggs);
+        // gameCounter.update(pickedEggs);
 
         var loop = () => {
             pickHelper.pick(ui.getPickPosition(), eggModels, sceneManager.getCamera());
@@ -126,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
-                gameCounter.update(pickedEggs);
+                // gameCounter.update(pickedEggs);
             }
         });
 

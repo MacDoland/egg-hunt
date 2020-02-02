@@ -17,21 +17,30 @@ class SceneManager {
         this.container = document.body.querySelector('#egg-hunt-game .game-container')
 
         this.scene = new THREE.Scene();
-        this.renderer = new THREE.WebGLRenderer(/*{ alpha: true }*/);
-        this.renderer.setClearColor(0xb2bbbd, 1);
-        this.renderer.setPixelRatio(window.devicePixelRatio)
-
+        this.renderer = new THREE.WebGLRenderer(/*{ alpha: true }*/{ antialias: true });
+        this.renderer.setClearColor(0x87CEEB, 1);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
 
         this.rotation = 0;
 
-        this.stats = new Stats();
-        this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        document.body.appendChild(this.stats.dom);
+        // this.stats = new Stats();
+        // this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        // document.body.appendChild(this.stats.dom);
     }
 
     init() {
         this.pixelRatio = this.setCanvasScalingFactor();
-        this.renderer.setSize(this.width * 4, this.height * 4);
+        // this.renderer.setSize(this.width * 4, this.height * 4);
+        this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
+
+        let resize = (() => {
+            this.camera.aspect = this.container.offsetWidth / this.container.offsetHeight;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
+        }).bind(this);
+
+        window.addEventListener('resize', resize);
+
         this.renderer.shadowMapEnabled = true;
         this.renderer.shadowMapSoft = true;
         this.renderer.shadowMapType = THREE.PCFShadowMap;
@@ -44,7 +53,7 @@ class SceneManager {
         }
 
         this.camera = new THREE.PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 3000);
-        this.camera.position.set(0, 1.5, 12.5)
+        this.camera.position.set(0, 1.5, 14.5)
         this.camera.zoom = 1;
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         this.camera.updateProjectionMatrix();
@@ -118,8 +127,8 @@ class SceneManager {
     }
 
     zoom(ammount) {
-       this.camera.zoom = ammount;
-       this.camera.updateProjectionMatrix();
+        this.camera.zoom = ammount;
+        this.camera.updateProjectionMatrix();
     }
 
     setRoot(rootNode) {
@@ -190,6 +199,11 @@ class SceneManager {
                     return;
                 }
 
+                if (model.name.includes('__hidden')) {
+                    model.visible = false;
+                    return;
+                }
+
                 model.material = new THREE.MeshBasicMaterial({
                     lightMap: lightMapTexture,
                     lightMapIntensity: 2,
@@ -232,6 +246,8 @@ class SceneManager {
                 model.material.needsUpdate = true;
             }
         })
+
+
 
         setTimeout(() => this.eventDispatcher.dispatch(this.events.onUpdatedSceneMaterials), 2000);
     }

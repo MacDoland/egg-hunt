@@ -2,7 +2,7 @@ $mobileWidth: 90vw;
 $mobileHeight: 67.5vw;
 
 .egg-hunt {
-  padding: 80px;
+  // padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,22 +10,22 @@ $mobileHeight: 67.5vw;
   align-items: center;
   align-content: center;
 
-  @media (max-width: 767px) { 
-    padding: 20px;
+  @media (max-width: 767px) {
+    // padding: 20px;
   }
 
-  button{
+  button {
     margin: 40px 0;
   }
 
   .game-bar {
-    display:flex;
+    display: flex;
     width: 1041px;
     align-items: center;
     align-content: center;
     justify-items: center;
     justify-content: space-between;
-    @media (max-width: 767px) { 
+    @media (max-width: 767px) {
       width: 100vw;
     }
   }
@@ -47,17 +47,19 @@ $mobileHeight: 67.5vw;
     .score-screen {
       background: #3a3020;
       display: none;
-      width: 1024px;
-      height: 768px;
+      // width: 1024px;
+      // height: 768px;
+      width: 100vw;
+      height: 100vh;
       align-items: center;
       align-content: center;
       justify-items: center;
       justify-content: center;
 
-      @media (max-width: 767px) { 
-        width: #{$mobileWidth};
-        height: #{$mobileHeight};;
-      }
+      // @media (max-width: 767px) {
+      //   width: #{$mobileWidth};
+      //   height: #{$mobileHeight};
+      // }
     }
 
     .score-screen {
@@ -71,12 +73,17 @@ $mobileHeight: 67.5vw;
     .game-container {
       visibility: hidden;
       cursor: grab;
-      width: 1024px;
-      height: 768px;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      justify-items: center;
 
-      @media (max-width: 767px) { 
-        width: #{$mobileWidth};
-        height: #{$mobileHeight};;
+      @media (max-width: 767px) {
+        // width: #{$mobileWidth};
+        // height: #{$mobileHeight};
       }
 
       position: absolute;
@@ -84,13 +91,16 @@ $mobileHeight: 67.5vw;
       top: -10000;
 
       canvas {
-        width: 1024px !important;
-        height: 768px !important;
+        // width: 1024px !important;
+        // height: 768px !important;
 
-        @media (max-width: 767px) { 
-          width: #{$mobileWidth}!important;
-          height: #{$mobileHeight}!important;
-        }
+        width: 100%!important;
+        height: 100%!important;
+
+        // @media (max-width: 767px) {
+        //   width: #{$mobileWidth} !important;
+        //   height: #{$mobileHeight} !important;
+        // }
       }
 
       &.grabbing {

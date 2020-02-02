@@ -13,46 +13,74 @@ class UI {
         var sceneRotationControl = document.body.querySelector('#scene-rotation-control');
         var scenePanControl = document.body.querySelector('#scene-pan-control');
         this.gameElement = document.body.querySelector('#egg-hunt-game .game-container');
-        var degrees = parseFloat(sceneRotationControl.value);
-        var height = parseFloat(scenePanControl.value);
+        var degrees = sceneRotationControl ? parseFloat(sceneRotationControl.value) : 180;
+        var height = scenePanControl ? parseFloat(scenePanControl.value) : -200;
         var rotationSpeed = 0.35;
         var panSpeed = 0.75;
         var mouseDown = false;
         var zoom = this.sceneManager.getZoom();
         var zoomSpeed = 2;
+        var maxHeight = scenePanControl ? scenePanControl.max : 600;
+        var minHeight = scenePanControl ? scenePanControl.min : -1500;
 
         this.sceneManager.pan(height / 100);
 
-        sceneRotationControl.oninput = function () {
-            sceneManager.rotateTo(this.value);
-            window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
-        }
 
-        scenePanControl.oninput = function () {
-            var value = this.value;
-            if (typeof (this.value === "string")) {
-                value = parseFloat(this.value);
+        if (sceneRotationControl) {
+            sceneRotationControl.oninput = function () {
+                sceneManager.rotateTo(this.value);
+                window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
             }
-
-            sceneManager.pan(value / 100);
-            window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
         }
 
-        this.gameElement.addEventListener('mousedown', (e) => {
+        if (scenePanControl) {
+            scenePanControl.oninput = function () {
+                var value = this.value;
+                if (typeof (this.value === "string")) {
+                    value = parseFloat(this.value);
+                }
+
+                sceneManager.pan(value / 100);
+                window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
+            }
+        }
+
+        let mouseStart = (e) => {
             mouseDown = true;
             this.gameElement.classList.add('grabbing');
-        });
+        }
 
-        document.body.addEventListener('mouseup', (e) => {
+        let mouseEnd = (e) => {
             mouseDown = false;
             this.gameElement.classList.remove('grabbing');
-        });
+        };
 
-        document.body.addEventListener('mousemove', (e) => {
+        var touchStartPoint;
+        var previousTouchX = 0;
+        var previousTouchY = 0;
+    
+
+        let touchStart = (e) => {
+            mouseDown = true;
+            touchStartPoint = event.touches[0];
+            previousTouchX =  event.touches[0].clientX;
+            previousTouchY =  event.touches[0].clientY;
+            this.gameElement.classList.add('grabbing');
+            e.preventDefault();
+        }
+
+        let touchEnd = (e) => {
+            mouseDown = false;
+            this.gameElement.classList.remove('grabbing');
+            e.preventDefault();
+        };
+
+        let mouseMove = (e) => {
             if (mouseDown) {
                 degrees += e.movementX * rotationSpeed;
                 height -= e.movementY * panSpeed;
-                height = THREE.Math.clamp(height, parseFloat(scenePanControl.min), parseFloat(scenePanControl.max));
+
+                height = THREE.Math.clamp(height, parseFloat(minHeight), parseFloat(maxHeight));
 
                 if (degrees > 359) {
                     degrees = 0;
@@ -62,18 +90,65 @@ class UI {
                     degrees = 359;
                 }
 
-                sceneRotationControl.value = degrees;
-                scenePanControl.value = height;
+                if (sceneRotationControl) {
+                    sceneRotationControl.value = degrees;
+                }
+
+                if (scenePanControl) {
+                    scenePanControl.value = height;
+                }
 
                 sceneManager.rotateTo(degrees);
                 sceneManager.pan(height / 100);
                 window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
+                e.preventDefault();
             }
-        });
+        };
+
+       
+
+        let touchMove = (e) => {
+            if (mouseDown) {
+                degrees +=  (event.touches[0].clientX - previousTouchX) * rotationSpeed;
+                height -= (event.touches[0].clientY - previousTouchY) * panSpeed;
+
+                height = THREE.Math.clamp(height, parseFloat(minHeight), parseFloat(maxHeight));
+
+                if (degrees > 359) {
+                    degrees = 0;
+                }
+
+                if (degrees < 0) {
+                    degrees = 359;
+                }
+
+                if (sceneRotationControl) {
+                    sceneRotationControl.value = degrees;
+                }
+
+                if (scenePanControl) {
+                    scenePanControl.value = height;
+                }
+
+                sceneManager.rotateTo(degrees);
+                sceneManager.pan(height / 100);
+                window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
+
+                previousTouchX = event.touches[0].clientX;
+                previousTouchY = event.touches[0].clientY;
+            }
+        };
+
+        this.gameElement.addEventListener('mousedown', mouseStart);
+        this.gameElement.addEventListener('touchstart', touchStart);
+        document.body.addEventListener('mouseup', mouseEnd);
+        document.body.addEventListener('touchend', touchEnd);
+        document.body.addEventListener('mousemove', mouseMove);
+        document.body.addEventListener('touchmove', touchMove);
 
         this.gameElement.addEventListener("wheel", e => {
             e.preventDefault();
-            zoom -= (e.deltaY /1000) * zoomSpeed;
+            zoom -= (e.deltaY / 1000) * zoomSpeed;
             zoom = THREE.Math.clamp(zoom, 1, 3);
             sceneManager.zoom(zoom);
             window.requestAnimationFrame(sceneManager.render.bind(sceneManager));
@@ -109,16 +184,16 @@ class UI {
             x: event.clientX,
             y: event.clientY
         },
-        this.canvas);
+            this.canvas);
         this.setPickPosition.bind(this)();
     }
 
-    updatePosition(event){
+    updatePosition(event) {
         this.mousePosition = this.getCanvasRelativePosition({
             x: event.clientX,
             y: event.clientY
         },
-        this.canvas);
+            this.canvas);
     }
 
     setPickPosition() {
