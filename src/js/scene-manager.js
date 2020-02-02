@@ -1,6 +1,6 @@
-import {PerspectiveCamera, Scene, WebGLRenderer, Vector3, Math, MeshBasicMaterial, DoubleSide, PCFShadowMap, sRGBEncoding } from "three";
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-
+import { PerspectiveCamera, Scene, WebGLRenderer, Vector3, Math, MeshBasicMaterial, DoubleSide, PCFShadowMap, sRGBEncoding } from "three";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import PostProcessingManager from './post-processing-manager';
 
 import EventDispatcher from './event-dispatcher';
 import Utility from './utility';
@@ -18,6 +18,8 @@ class SceneManager {
         var depth = 0.45;
         this.width = 1024;
         this.height = 768;
+
+        this.usePostProcessing = false;
 
         this.container = document.body.querySelector('#egg-hunt-game .game-container')
 
@@ -66,23 +68,10 @@ class SceneManager {
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.updateProjectionMatrix();
 
-        // var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-        // this.scene.add( directionalLight );
 
+        this.postProcessingManager = new PostProcessingManager(this.scene, this.renderer, this.camera);
+        this.postProcessingManager.init();
 
-        // let loader = new THREE.CubeTextureLoader();
-        // let texture = loader.load([
-        //     './media/sky/01A_Day_Sunless_Left.png',
-        //     './media/sky/01A_Day_Sunless_Right.png',
-        //     './media/sky/01A_Day_Sunless_Up.png',
-        //     './media/sky/01A_Day_Sunless_Down.png',
-        //     './media/sky/01A_Day_Sunless_Front.png',
-        //     './media/sky/01A_Day_Sunless_Back.png'
-        // ],
-        //     function (cubeTexture) {
-        //         this.setBackground(cubeTexture);
-        //         this.eventDispatcher.dispatch(this.events.afterInit);
-        //     }.bind(this));
 
         this.eventDispatcher.dispatch(this.events.afterInit);
     }
@@ -132,8 +121,8 @@ class SceneManager {
     }
 
     addSky(item) {
-       this.skyBox = item;
-       this.scene.add(this.skyBox);
+        this.skyBox = item;
+        this.scene.add(this.skyBox);
     }
 
     remove(item) {
@@ -145,7 +134,7 @@ class SceneManager {
             this.root.rotation.y = Math.degToRad(degrees);
         }
 
-        if(this.skyBox) {
+        if (this.skyBox) {
             this.skyBox.rotation.y = Math.degToRad(degrees);
         }
     }
@@ -155,7 +144,7 @@ class SceneManager {
             this.root.rotation.y += Math.degToRad(degrees);
         }
 
-        if(this.skyBox) {
+        if (this.skyBox) {
             this.skyBox.rotation.y += Math.degToRad(degrees);
         }
     }
@@ -304,6 +293,13 @@ class SceneManager {
     render() {
         // this.stats.begin();
         // this.renderer.render(this.scene, this.camera);
+
+        if (this.usePostProcessing) {
+           this.postProcessingManager.render();
+        }
+        else {
+            this.renderer.render(this.scene, this.camera);
+        }
 
         this.eventDispatcher.dispatch(this.events.onRender);
         // this.stats.end();

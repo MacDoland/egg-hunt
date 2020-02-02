@@ -7,7 +7,6 @@ import AudioService from './audio-service';
 import GameCounter from './components/game-counter.component';
 import SceneManager from './scene-manager';
 import EggService from './egg-service';
-import PostProcessingManager from './post-processing-manager';
 import PickHelper from './pick-helper';
 import UI from './ui-manager';
 import Utility from './utility';
@@ -60,12 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     sceneManager.onAfterInit(() => {
-        let postProcessingManager = new PostProcessingManager(sceneManager);
-        postProcessingManager.init();
-        sceneManager.onRender(postProcessingManager.render.bind(postProcessingManager));
-
-
-        apiService.getAllEggs();
+         apiService.getAllEggs();
 
         var listener = new AudioListener();
         var sfxListener = new AudioListener();
