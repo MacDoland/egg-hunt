@@ -99,6 +99,54 @@ document.addEventListener("DOMContentLoaded", function () {
         eggService.buildEggs(eggsData, models);
     });
 
+    sceneManager.onModelsLoaded(() => {
+        
+        let loader = new THREE.CubeTextureLoader();
+
+
+        let textureUrls = [
+            './media/sky/01A_Day_Sunless_Left.png',
+            './media/sky/01A_Day_Sunless_Right.png',
+            './media/sky/01A_Day_Sunless_Up.png',
+            './media/sky/01A_Day_Sunless_Down.png',
+            './media/sky/01A_Day_Sunless_Front.png',
+            './media/sky/01A_Day_Sunless_Back.png'
+        ];
+
+        let skyboxLoader = new AssetLoader();
+
+        skyboxLoader.onLoadTextures((textures) => {
+            var materials = textures.map((texture) =>{
+                return new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.BackSide
+                })
+            });
+
+            var skyBoxGeometry = new THREE.CubeGeometry(5000, 5000, 5000);
+            var skyBoxMaterial = new THREE.MeshFaceMaterial(materials);
+            var mesh = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+            mesh.scale.y = -1;
+            sceneManager.addSky(mesh)
+        });
+
+        skyboxLoader.loadTextures(textureUrls);
+
+        // let texture = loader.load(textureUrls,
+        //      ((cubeTexture) => {
+        //         var skyBoxGeometry = new THREE.CubeGeometry(5000, 5000, 5000);
+        //         var skyBoxMaterial = new THREE.MeshBasicMaterial({
+        //             envMap: cubeTexture,
+        //             side: THREE.BackSide
+        //         })
+        //         var mesh = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+        //         sceneManager.addSky(mesh)
+        //       // sceneManager.add(mesh);
+
+        //     }).bind(this));
+
+    });
+
     eggService.onHatchedEggs((eggs) => {
         loadedEggs = eggs;
         eggModels = eggs.map((egg) => egg.model);

@@ -16,12 +16,6 @@ class SceneManager {
 
         this.container = document.body.querySelector('#egg-hunt-game .game-container')
 
-
-
-
-
-
-
         this.scene = new THREE.Scene({
             // background: texture
         });
@@ -61,7 +55,7 @@ class SceneManager {
             element.append(this.renderer.domElement);
         }
 
-        this.camera = new THREE.PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 30000);
+        this.camera = new THREE.PerspectiveCamera(60, this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight, 1, 10000);
         this.camera.position.set(0, 1.5, 14.5)
         this.camera.zoom = 1;
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -71,22 +65,21 @@ class SceneManager {
         // this.scene.add( directionalLight );
 
 
-        let loader = new THREE.CubeTextureLoader();
-        let texture = loader.load([
-            './media/sky/01A_Day_Sunless_Left.png',
-            './media/sky/01A_Day_Sunless_Right.png',
-            './media/sky/01A_Day_Sunless_Up.png',
-            './media/sky/01A_Day_Sunless_Down.png',
-            './media/sky/01A_Day_Sunless_Front.png',
-            './media/sky/01A_Day_Sunless_Back.png'
-        ],
-        function(cubeTexture){
-            this.setBackground(cubeTexture);
-            this.eventDispatcher.dispatch(this.events.afterInit);
-        }.bind(this));
+        // let loader = new THREE.CubeTextureLoader();
+        // let texture = loader.load([
+        //     './media/sky/01A_Day_Sunless_Left.png',
+        //     './media/sky/01A_Day_Sunless_Right.png',
+        //     './media/sky/01A_Day_Sunless_Up.png',
+        //     './media/sky/01A_Day_Sunless_Down.png',
+        //     './media/sky/01A_Day_Sunless_Front.png',
+        //     './media/sky/01A_Day_Sunless_Back.png'
+        // ],
+        //     function (cubeTexture) {
+        //         this.setBackground(cubeTexture);
+        //         this.eventDispatcher.dispatch(this.events.afterInit);
+        //     }.bind(this));
 
-
-       
+        this.eventDispatcher.dispatch(this.events.afterInit);
     }
 
     updateRenderScale() {
@@ -129,6 +122,11 @@ class SceneManager {
         this.scene.add(item);
     }
 
+    addSky(item) {
+       this.skyBox = item;
+       this.scene.add(this.skyBox);
+    }
+
     remove(item) {
         this.scene.remove(item);
     }
@@ -137,11 +135,19 @@ class SceneManager {
         if (this.root) {
             this.root.rotation.y = THREE.Math.degToRad(degrees);
         }
+
+        if(this.skyBox) {
+            this.skyBox.rotation.y = THREE.Math.degToRad(degrees);
+        }
     }
 
     rotateBy(degrees) {
         if (this.root) {
             this.root.rotation.y += THREE.Math.degToRad(degrees);
+        }
+
+        if(this.skyBox) {
+            this.skyBox.rotation.y += THREE.Math.degToRad(degrees);
         }
     }
 
