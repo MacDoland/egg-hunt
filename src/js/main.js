@@ -106,12 +106,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // audioService.disable.bind(audioService)();
     
         let textureUrls = [
-            './media/sky/01A_Day_Sunless_Left.png',
-            './media/sky/01A_Day_Sunless_Right.png',
-            './media/sky/01A_Day_Sunless_Down.png',
-            './media/sky/01A_Day_Sunless_Up.png',
-            './media/sky/01A_Day_Sunless_Front.png',
-            './media/sky/01A_Day_Sunless_Back.png'
+            './media/sky/05A_Day_Sun_Left.png',
+            './media/sky/05A_Day_Sun_Right.png',
+            './media/sky/05A_Day_Sun_Down.png',
+            './media/sky/05A_Day_Sun_Up.png',
+            './media/sky/05A_Day_Sun_Front.png',
+            './media/sky/05A_Day_Sun_Back.png'
         ];
 
         let skyboxLoader = new AssetLoader();
@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var skyBoxMaterial = new MeshFaceMaterial(materials);
             var mesh = new Mesh(skyBoxGeometry, skyBoxMaterial);
             mesh.scale.y = -1;
+            mesh.position.y = -100;
             sceneManager.addSky(mesh)
         });
 
